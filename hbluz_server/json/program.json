@@ -1,0 +1,30 @@
+{
+    "Program": {
+        "ProgramName": "Phalaenopsis",
+        "ProgramMode": 0,
+        "SyncDateTime": 1518216139,
+        "ProgramDateStart": 1518134400,
+        "PulseFrequency": 1000,
+        "Lightsettings": [{
+                "Description": "Morgens Blau",
+                "RelativeStart": 0,
+                "Duration": 72000,
+                "TimeStart": 3600,
+                "TimeEnd": 7200,
+                "PointA": 0,
+                "PointB": 1024,
+                "ChannelID": 1
+            },
+            {
+                "Description": "Mittags Rot",
+                "RelativeStart": 72000,
+                "Duration": 72000,
+                "TimeStart": 7200,
+                "TimeEnd": 10800,
+                "PointA": 0,
+                "PointB": 1024,
+                "ChannelID": 3
+            }
+        ]
+    }
+}

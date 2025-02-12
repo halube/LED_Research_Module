@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- Routing -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-route.js"></script>
+    
+    <!-- <script src="./js/angular.min.js"></script> -->
+    <script src="./js/Chart.min.js"></script>
+    <script src="./js/angular-chart.min.js"></script>
+
+    <!--Angular Material-->
+    <script src="./js/angular-animate.min.js"></script>
+    <script src="./js/angular-aria.min.js"></script>
+    <script src="./js/angular-messages.min.js"></script>
+    <script src="./js/angular-material.min.js"></script>
+    <link rel="stylesheet" href="./css/angular-material.min.css">
+    <link rel="stylesheet" href="./css/stylesheet.css">
+    <link rel="stylesheet" href="./css/icon.css">
+               
+
+</head>
+
+
+<script language="javascript">
+        angular
+            .module('myApp', ['ngMaterial', 'material.components.expansionPanels', 'ngMessages'])
+            .controller('MyController', function ($scope, $mdDialog) {
+                //controller code goes here...    
+                $scope.currNavItem = 'page1';
+                $scope.goto = function(page){
+                $scope.currNavItem = page;
+            };
+        });
+      
+        var app = angular.module("router", ["ngRoute"]);
+            app.config(function($routeProvider) {
+                $routeProvider
+                .when("/london", {
+                    templateUrl : "london.html"
+                })
+                .when("/paris", {
+                    templateUrl : "paris.html"
+                });
+            });        
+    
+    </script>
+
+<body>
+
+  <div id="wrap" ng-app="myApp" ng-controller="myCtrl">
+        
+        <!--Toolbar-->
+        <md-toolbar layout="row" layout-align="space-between center" class="black">
+            <span>
+                <img src="./images/dimlab.svg" alt="Dimlab" height="    70">
+            </span>
+            <!--The left side-->
+            <!--<span>                   
+                <img src="./images/5d.svg" alt="5Dimensions" height="30">
+            </span> -->
+            <!--The right side-->
+            <span >        
+                <img src="./images/luh2.svg" alt="5Dimensions" height="50" >
+            </span>
+        </md-toolbar>
+            <div class="gradient">
+            </div>
+        <md-toolbar class="blacksmall">
+        </md-toolbar>
+
+        <div layout="column" layout-align="start">        
+            <md-nav-bar class="grey" md-no-ink-bar="disableInkBar" md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">               
+                <md-nav-item md-nav-click="goto('page1')" name="Home" >
+                        <md-icon class="material-icons" style="color: rgb(255, 255, 255);">home</md-icon>                  
+                </md-nav-item>
+                <md-nav-item md-nav-href="#!london" name="page2">
+                        <md-icon class="material-icons" style="color: rgb(255, 255, 255);">perm_identity</md-icon>
+                </md-nav-item>
+                <md-nav-item md-nav-href="#!paris" name="page3" >
+                        <md-icon class="material-icons" style="color: rgb(255, 255, 255);">settings</md-icon>
+                </md-nav-item>
+                    <!--Switch Bar-->
+                    <md-switch class="md-toolbar-tools" style="color: rgb(255, 255, 255);" layout-margin layout-align="end" ng-model="UserMode" aria-label="Switch 1">
+                            {{ UserMode ? "Advanced Mode"  : "Normal Mode" }}
+                    </md-switch>                    
+            </md-nav-bar>
+        </div>                   
+    
+    </div>
+
+    
+    <div id="app2" ng-app="router">
+            <a href="#!london">Link 1</a>
+            <a href="#!paris">Link 2</a>    
+            <div ng-view></div>
+    </div>
+
+    <script>
+        angular.bootstrap(document.getElementById("app2"), ['router']);
+    </script>
+
+    <script type="text/javascript" src="./js/hbluz.js">
+
+    </script>
+
+</body>
+
+</html>

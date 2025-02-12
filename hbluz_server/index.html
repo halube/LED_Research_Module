@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="./js/angular.min.js"></script>
+    <script src="./js/Chart.min.js"></script>
+    <script src="./js/angular-chart.min.js"></script>
+    <link rel="stylesheet" href="./css/stylesheet.css">
+
+    <!--Angular Material-->
+    <script src="./js/angular-animate.min.js"></script>
+    <script src="./js/angular-aria.min.js"></script>
+    <script src="./js/angular-messages.min.js"></script>
+    <script src="./js/angular-material.min.js"></script>
+    <link rel="stylesheet" href="./css/angular-material.min.css">
+    <link rel="stylesheet" href="./css/stylesheet.css">
+</head>
+
+<body>
+
+    <div id="wrap" ng-app="myApp" ng-controller="myCtrl">
+        <md-toolbar layout="row" layout-align="space-between center" class="black">
+            <span>
+                <img src="./images/dimlab.svg" alt="Dimlab" height="60">
+            </span>
+            <span>
+                <img src="./images/luh2.svg" alt="5Dimensions" height="40">
+            </span>
+        </md-toolbar>
+        <div class="gradient"></div>
+        </md-toolbar>
+        <div id="main">
+
+
+            <div>
+                <h3>Users</h3>
+                <select id="slctBxUsers" ng-model="selectedUser" ng-options="user.name for user in users" ng-change="selectedUserChanged()" size="1"><option style="display:none" value="">Select a User</option></select><br>
+                <h2>Connection</h2>
+                <h3>Select LED-Research-Modul</h3>
+                <select id="slctBxDevices" ng-model="selectedDevice" ng-change="selectedDeviceChanged()" ng-options="y.IP + ':' + y.Port + ' (' + y.DeviceName + ', ' + (y.Status == 0 ? '' : y.ProgramName + ', ')  + (y.Status == 0 ? 'Ready' : '') + (y.Status == 1 ? 'Running' : '') + (y.Status == 2 ? 'Finished' : '') + (y.PasswordProtected == 1 ? ', Password Protected)' : ')') for (x, y) in deviceList"
+                    size="3"><option style="display:none" value="">select a type</option></select><br>
+                <label hidden for="inptIP">Device IP:</label><input hidden type="text" name="inptIP" ng-model="ip"><label hidden for="inptPort">Port:</label><input hidden type="text" name="inptPort" ng-model="port">
+                <button ng-click="searchDevices()">Refresh</button>
+                <button ng-click="connect(ip,port)">Connect</button>
+            </div>
+            <br>
+            <div>
+                <h2>Program Database</h2>
+                <h3>Programs</h3>
+                <select id="slctBxPrograms" ng-model="selectedProgram" ng-options="y.date_posted + ' - ' + y.program_name + (y.is_autosave == 1 ? ' - Autosave' : '')  for (x,y) in programs" ng-change="selectedProgramChanged()" size="3"><option style="display:none" value="">Select a Program</option></select><br>
+                <h2>Program Setting</h2>
+                <label for="inptDeviceName">Device Name:</label><input type="text" id="inptDeviceName" ng-model="rawJSON.Program.DeviceName"><br>
+                <label for="inptProgramName">Program Name:</label><input type="text" id="inptProgramName" ng-model="rawJSON.Program.ProgramName"><br>
+                <label for="inptProgramStart">Program Start:</label><input type="date" id="inptProgramStart" ng-model="_ProgramDateStart" ng-change="programDateStartChanged()"><input type="checkbox" ng-model="_AutoUpdateDates.Checked" name="chkBxAutoUpdateDates"
+                    ng-checked="true"><label for="chkBxAutoUpdateDates">Automatically update dates</label><br>
+                <button ng-click="UploadProgramToDB(selectedUser.id,rawJSON.Program.ProgramName,rawJSON|json,0)">Save to Database</button>
+                <button ng-click="DeleteProgramFromDB(selectedProgram.id, selectedProgram.program_name)">Delete from Database</button>
+                <!--<button ng-click="UploadProgram()">Upload From File</button>
+                <button ng-click="DownloadProgram()">Download To File</button><br>-->
+            </div>
+            <div>
+                <h3>Pulse Frequency:</h3>
+                <label>Determines the frequency for all LED channels.</label>
+                <br>
+                <input type="range" id="rngPulseFreq" min="40" max="1000" step="1" ng-model="rawJSON.Program.PulseFrequency"><input type="text" id="inptPulseFreq" step="1" min="40" max="1000" ng-model="rawJSON.Program.PulseFrequency"></input>
+                <h2>Lightsettings</h2>
+                <select id="slctBxLightsetting" ng-model="selectedLightsetting" ng-change="selectedLightsettingChanged()" ng-options="y.Description + ' (' + y.RelativeStart + 'd-' + (y.RelativeStart + y.Duration) + 'd)' + ' (' + y.TimeStart + '-' + y.TimeEnd + ')' + ' (' + (y.ChannelID != 5 ? (LEDLookup[y.ChannelID].Wavelength + 'nm') : '6500K') + ')' + ' (' + (((y.PWMPointB - y.PWMPointA) * 100 / 4095) | number : 2) + '%)' for (x, y) in rawJSON.Program.Lightsettings.Lightsetting"
+                    size="5"><option style="display:none" value="">select a type</option></select><br>
+                <button ng-click="addNewLightsetting()">Add New</button>
+                <button ng-click="duplicateLightsetting()">Duplicate Selected</button>
+                <button ng-click="removeLightsetting(selectedLightsetting)">Remove Selected</button>
+                <button ng-click="undoLastLightsetting()">Undo Last Removal</button>
+                <h3>You selected: {{selectedLightsetting.Description}}</h3>
+                <h3>Description:</h3>
+                <label for="inptDescription">Description:</label><input type="text" id="inptDescription" ng-model="selectedLightsetting.Description">
+                <h3>Dates:</h3>
+                <label for="inptRelativeStart">Start:</label><input type="date" id="inptRelativeStart" ng-model="_RelativeStart" ng-change="relativeStartChanged()"> <label for="inptDuration">End:</label><input type="date" id="inptDuration" ng-model="_Duration"
+                    ng-change="durationChanged()"><br>
+                <h3>Time:</h3>
+                <label for="inptTimeStart">Start:</label><input type="time" id="inptTimeStart" ng-model="_TimeStart" ng-change="timeStartChanged()"> <label for="inptTimeEnd">End:</label><input type="time" id="inptTimeEnd" ng-model="_TimeEnd" ng-change="timeEndChanged()"><br>
+                <h3>Intensity:</h3>
+                <input type="range" id="rngPWMPointA" min="0" max="{{_PWMPointB}}" step="1" ng-model="_PWMPointA" ng-change="PWMPointChangedAB()"><input type="text" id="inptPWMPointA" min="0" max="{{_PWMPointB}}" step="1" ng-model="_PWMPointA" ng-change="PWMPointChangedAB()"></input><br>
+                <input type="range" id="rngPWMPointB" min="{{_PWMPointA}}" max="4095" step="1" ng-model="_PWMPointB" ng-change="PWMPointChangedAB()"><input type="text" id="inptPWMPointB" min="{{_PWMPointA}}" max="4095" step="1" ng-model="_PWMPointB" ng-change="PWMPointChangedAB()"></input><br>
+                <input type="range" id="rngIntensity" min="0" max="{{(4095-_PWMPointA)*100/4095}}" step="1" ng-model="_Intensity" ng-change="intensityChanged()"><input type="text" id="inptIntensity" min="0" max="{{(4095-_PWMPointA)*100/4095}}" step="1"
+                    ng-model="_Intensity" ng-change="intensityChanged()"></input><br>
+                <h3>LED Channel:</h3>
+                <select id="slctBxWavelenght" size="5" ng-model="selectedLightsetting.ChannelID" ng-change="wavelengthChanged()" ng-options="y.ChannelID as '#' + (y.ChannelID + 1)+ ' ' + y.TrivialName + ' (' + y.Wavelength + ')' for (x, y) in LEDLookup">
+                    <option style="display:none" value="">select a type</option>
+                </select>
+                <!-- <h3>LED Channel Calibration:</h3>
+                <div ng-repeat="(x, y) in LEDLookup">
+                    <label>#{{ y.ChannelID }}:</label>
+                    <input type="number" ng-model="rawJSON.Program.Calibrations.Calibration[x].a">
+                </div> -->
+            </div>
+
+            <div id="Raw Data" class="tabcontent">
+                <h2>Commands</h2>
+                <div ng-controller="TimeCtrl">
+                    <p>{{ clock | date:'HH:mm:ss dd.MM.yyyy' }}</p>
+                </div>
+                <label for="inptProgramPassword">Set Password:</label><input type="text" id="inptProgramPassword" ng-model="_ProgramPassword"><br><br>
+                <button ng-click="postJSON(1)">Sync Time and Post JSON</button>
+                <span>
+                    <img ng-src="./images/{{_SendIcon}}.svg" height="40">
+                </span>
+            </div>
+
+        </div>
+        <div id="middlebar">
+            <div layout=row id="temperature">
+                <label for="inptTemp1">Temperature Top:</label><input style="margin-right: 10px;" type="text" id="inptTemp1" ng-model="TemperatureTop"><br>
+                <label for="inptTemp2">Temperature Bottom:</label><input type="text" id="inptTemp2" ng-model="TemperatureBottom"><br>
+            </div>
+            <div id="charts">
+
+
+                <canvas class="chart chart-line" chart-colors="TEMPcolors" chart-data="TEMPdata" chart-series="TEMPseries" chart-options="TEMPoptions"></canvas>
+                <canvas class="chart chart-line" chart-colors="SPECcolors" chart-data="SPECdata" chart-series="SPECseries" chart-options="SPECoptions"></canvas>
+                <canvas class="chart chart-line" chart-colors="PWMcolors" chart-data="PWMdata" chart-series="PWMseries" chart-options="PWMoptions"></canvas>
+
+
+            </div>
+            <!-- <div id="sidebar">
+            <div id="jsoninfo">
+                <pre>{{rawJSON|json}}</pre>
+            </div>
+        </div> -->
+
+        </div>
+
+        <script type="text/javascript" src="./js/hbluz.js"></script>
+</body>
+
+</html>

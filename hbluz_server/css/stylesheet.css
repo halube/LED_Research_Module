@@ -1,0 +1,122 @@
+#wrap {
+    width: 100%;
+    background-color: #dbdbdb
+}
+
+#main {
+    float: left;
+    margin: 10px;
+    width: 40%;
+}
+
+#middlebar {
+    float: right;
+    position: fixed;
+    top: 80px;
+    right: 20%;
+}
+
+
+/* #sidebar {
+    float: right;
+    width: 20%;
+} */
+
+#temperature {
+    margin: 5px;
+}
+
+#slctBxDevices {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;
+    /* Firefox, other Gecko */
+    box-sizing: border-box;
+    /* Opera/IE 8+ */
+}
+
+#slctBxLightsetting {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;
+    /* Firefox, other Gecko */
+    box-sizing: border-box;
+    /* Opera/IE 8+ */
+}
+
+#slctBxPrograms {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;
+    /* Firefox, other Gecko */
+    box-sizing: border-box;
+    /* Opera/IE 8+ */
+}
+
+#charts {
+    /*position: fixed;*/
+    display: inline-block;
+    text-align: center;
+}
+
+#jsoninfo {
+    position: fixed;
+    top: 2%;
+}
+
+#doughnut {
+    max-width: 250px;
+    align-self: auto;
+}
+
+#black {
+    background-color: #111);
+}
+
+.md-sidenav-left .md-theme-indigo,
+.md-sidenav-left .nav-theme {
+    background-color: #00509b;
+}
+
+md-toolbar.black {
+    background-color: #111;
+    height: 10px;
+}
+
+md-card md-toolbar.black {
+    background-color: #111;
+    min-height: 40px;
+    height: 40px;
+}
+
+md-card-title {
+    padding: 6px 0px 0px 10px !important;
+}
+
+md-toolbar.blacksmall {
+    background-color: #111;
+    min-height: 20px;
+    height: 20px;
+}
+
+md-card.black {
+    background-color: #111;
+}
+
+md-nav-bar.black {
+    background-color: #111;
+}
+
+md-slider.black {
+    color: #111;
+}
+
+.gradient {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to left, #ff0000 0%, #fcfc00 25%, #00d100 50%, #00fcfc 75%, #0000ff 90%, #5F00FF 100%);
+    /* W3C */
+}

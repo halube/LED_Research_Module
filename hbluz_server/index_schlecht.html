@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+    <!-- Routing -->
+    <script src="./js/angular.min.js"></script>
+    <script src="./js/angular-route.js"></script>
+
+    <!-- <script src="./js/angular.min.js"></script> -->
+    <script src="./js/Chart.min.js"></script>
+    <script src="./js/angular-chart.min.js"></script>
+
+
+    <!--Angular Material-->
+    <script src="./js/angular-animate.min.js"></script>
+    <script src="./js/angular-aria.min.js"></script>
+    <script src="./js/angular-messages.min.js"></script>
+    <script src="./js/angular-material.min.js"></script>
+    <link rel="stylesheet" href="./css/angular-material.min.css">
+    <link rel="stylesheet" href="./css/stylesheet.css">
+    <link href="./css/icon.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div id="wrap" ng-app="myApp" ng-controller="myCtrl">
+        <!--Toolbar-->
+        <md-toolbar layout="row" layout-align="space-between center" class="black">
+            <span>
+                <img src="./images/dimlab.svg" alt="Dimlab" height="60">
+            </span>
+            <span>
+                <img src="./images/luh2.svg" alt="5Dimensions" height="40">
+            </span>
+        </md-toolbar>
+        <div class="gradient"></div>
+        </md-toolbar>
+        <!--Nav Bar-->
+        <div layout="column" layout-align="start">
+            <md-nav-bar class="black" md-no-ink-bar="disableInkBar" md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="black">
+                <md-nav-item md-nav-href="#!home" name="Home">
+                    <md-icon class="material-icons" style="color: rgb(255, 255, 255);">home</md-icon>
+                </md-nav-item>
+                <md-nav-item md-nav-href="#!user" name="User">
+                    <md-icon class="material-icons" style="color: rgb(255, 255, 255);">perm_identity</md-icon>
+                </md-nav-item>
+                <md-nav-item md-nav-href="#!settings" name="Settings">
+                    <md-icon class="material-icons" style="color: rgb(255, 255, 255);">settings</md-icon>
+                </md-nav-item>
+                <!--Switch Bar-->
+                <md-switch class="md-toolbar-tools" style="color: rgb(255, 255, 255);" layout-margin layout-align="end" ng-model="UserMode" aria-label="Switch 1">
+                    {{ UserMode ? "Advanced Mode" : "Normal Mode" }}
+                </md-switch>
+            </md-nav-bar>
+        </div>
+        <!-- NAV-BAR<div ng-controller="AppCtrl" ng-cloak>
+                            <md-content class="md-padding">
+                            <md-nav-bar
+                            md-no-ink-bar="disableInklBar"
+                            md-selected-nav-item="currentNavItem"
+                            nav-bar-aria-label="navigation links">
+                            <md-nav-item md-nav-click="goto('page1')" name="page1">
+                                Page One
+                            </md-nav-item>
+                            <md-nav-item md-nav-click="goto('page2')" name="page2">
+                                Page Two
+                            </md-nav-item>
+                            <md-nav-item md-nav-click="goto('page3')" name="page3">
+                                Page Three
+                            </md-nav-item>
+                            <!-- these require actual routing with ui-router or ng-route, so they
+                            won't work in the demo
+                            <md-nav-item md-nav-href="#page4" name="page5">Page Four</md-nav-item>
+                            <md-nav-item md-nav-sref="app.page5" name="page4">Page Five</md-nav-item>
+                            You can also add options for the <code>ui-sref-opts</code> attribute.
+                            <md-nav-item md-nav-sref="page6" sref-opts="{reload:true, notify:true}">
+                                Page Six
+                            </md-nav-item>         
+                            </md-nav-bar>
+                            <div class="ext-content">
+                            External content for `<span>{{currentNavItem}}</span>`.
+                            </div>
+                            <md-checkbox ng-model="disableInkBar">Disable Ink Bar</md-checkbox>
+                            </md-content>
+                        </div>-->
+
+
+        <div>
+            <!-- MODULE -->
+            <md-card >
+                <md-toolbar class="black">
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline" style="color: rgb(255, 255, 255);">Devices:</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                </md-toolbar>
+                <md-card-content layout=row >
+                    <md-input-container style="margin:10px;">
+                        <label>Module</label>
+                        <md-select style="margin:10px;" id="slctBxDevices" placeholder="Select module" ng-model="selectedDevice" ng-change="selectedDeviceChanged()">
+                            <md-option ng-repeat="device in deviceList" ng-value="device">
+                                <md-icon class="material-icons md-primary" style="color: rgb(0,0,0);">developer_board</md-icon>
+                                {{ device.IP + ':' + device.Port + ' (' + device.DeviceName + ', ' + device.ProgramName + ', ' + (device.Status == 0 ? 'Ready' : '') + (device.Status == 1 ? 'Running' : '') + (device.Status == 2 ? 'Finished' : '') + (device.PasswordProtected == 1 ? ',
+                                Password Protected)' : ')') }}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>                                   
+                <!-- </md-card-content>
+                <!-- Manual IP -->
+                <!-- <md-card-content>
+                    <md-input-container>
+                        <label>Device IP</label>
+                        <input ng-model="ip" type="text" name="inptIP">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Port:</label>
+                        <input ng-model="port" type="text" name="inptPort">
+                    <!-- </md-input-container> --> 
+                    
+                    <md-input-container style="margin:10px;">
+                        <label for="inptDeviceName">Device Name:</label>
+                        <input style="margin:10px;" type="text" id="inptDeviceName" ng-model="rawJSON.Program.DeviceName">
+                        <br>
+                    </md-input-container>
+                    <md-card-content>
+                    <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-disabled="false" ng-click="searchDevices()">
+                        Refresh
+                        <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">refresh</md-icon>
+                    </md-button>
+                    <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-disabled="false" ng-click="connect(ip,port)">
+                        Connect
+                        <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">wifi</md-icon>
+                    </md-button>
+                </md-card-content>
+                </md-card-content>
+            </md-card>
+            <!-- USER -->
+            <div>
+                <md-card>
+                    <md-toolbar class="black">
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline" style="color: rgb(255, 255, 255);">Users:</span>
+                            </md-card-title-text>
+                        </md-card-title>
+                    </md-toolbar>
+                    <md-card-content>
+                        <md-input-container>
+                            <label>Users</label>
+                            <md-select id="slctBxUsers" placeholder="Select user" ng-model="selectedUser" ng-change="selectedUserChanged()">
+                                <md-option ng-repeat="user in users" ng-value="user">
+                                    <md-icon class="material-icons" style="color: rgb(0,0,0);">perm_identity</md-icon>
+                                    {{user.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div layout="row">
+                <!-- Program -->
+                <div flex="50">
+                    <md-card>
+                        <md-toolbar class="black">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline" style="color: rgb(255, 255, 255);">Programs:</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </md-toolbar>
+                        <md-card-content>
+                            <md-input-container layout="column" layout-align="start">
+                                <label>Program</label>
+                                <md-select id="slctBxPrograms" placeholder="Select program" ng-model="selectedProgram" ng-change="selectedProgramChanged()" size=10>
+                                    <md-option ng-repeat="program in programs" ng-value="program">
+                                        <md-icon class="material-icons" style="color: rgb(0,0,0);">dehaze</md-icon>
+                                        {{ program.date_posted + ' - ' + program.program_name + (program.is_autosave == 1 ? ' - Autosave' : '')}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <div layout="row">
+                                <md-input-container flex="100">
+                                    <label for="inptProgramStart">Program Start:</label>
+                                    <md-datepicker id="inptProgramStart" ng-change="programDateStartChanged()" ng-model="_ProgramDateStart"></md-datepicker>
+                                </md-input-container>
+                                <md-input-container flex="30">
+                                    <input type="checkbox" ng-model="_AutoUpdateDates.Checked" name="chkBxAutoUpdateDates" ng-checked="true">
+                                    <label for="chkBxAutoUpdateDates">Automatically update dates</label>
+                                </md-input-container>
+                            </div>
+                            <md-input-container>
+                                <label for="inptProgramName">Program Name:</label>
+                                <input type="text" id="inptProgramName" ng-model="rawJSON.Program.ProgramName">
+                                <br>
+                            </md-input-container>
+                            <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-click="UploadProgramToDB(selectedUser.id,rawJSON.Program.ProgramName,rawJSON|json,0)">Save to Database
+                                <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">archive</md-icon>
+                            </md-button>
+                            <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-click="DeleteProgramFromDB(selectedProgram.id, selectedProgram.program_name)">Delete from Database
+                                <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">delete_forever</md-icon>
+                            </md-button>
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div flex="25" layout-align="end">
+                    <md-card>
+                        <md-toolbar class="black">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline" style="color: rgb(255, 255, 255);">Temperature Top:</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </md-toolbar>
+                        <md-card-content>
+                            <md-input-container flex layout-padding>
+                                <label>Temperature Top</label>
+                                <input flex type="number" ng-model="TemperatureTop">
+                            </md-input-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div flex="25" layout-align="end">
+                    <md-card>
+                        <md-toolbar class="black">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline" style="color: rgb(255, 255, 255);">Temperature Bottom:</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </md-toolbar>
+                        <md-card-content>
+                            <md-input-container flex layout-padding>
+                                <label>Temperature Bottom</label>
+                                <input flex type="number" ng-model="TemperatureBottom">
+                            </md-input-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </div>
+            <!--<div>
+                            <h2>Program Database</h2>                
+                            <h3>Programs</h3>
+                            <select id="slctBxPrograms" ng-model="selectedProgram" ng-options="y.date_posted + ' - ' + y.program_name + (y.is_autosave == 1 ? ' - Autosave' : '')  for (x,y) in programs" ng-change="selectedProgramChanged()" size="10">
+                                <option style="display:none" value="">Select a Program</option></select><br>
+                            <h2>Program Setting</h2>
+                            <label for="inptDeviceName">Device Name:</label><input type="text" id="inptDeviceName" ng-model="rawJSON.Program.DeviceName"><br>
+                            <label for="inptProgramName">Program Name:</label><input type="text" id="inptProgramName" ng-model="rawJSON.Program.ProgramName"><br>
+                            <label for="inptProgramStart">Program Start:</label><input type="date" id="inptProgramStart" ng-model="_ProgramDateStart" ng-change="programDateStartChanged()"><input type="checkbox" ng-model="_AutoUpdateDates.Checked" name="chkBxAutoUpdateDates"
+                                ng-checked="true"><label for="chkBxAutoUpdateDates">Automatically update dates</label><br>
+                            <button ng-click="UploadProgramToDB(selectedUser.id,rawJSON.Program.ProgramName,rawJSON|json,0)">Save to Database</button>
+                            <button ng-click="DeleteProgramFromDB(selectedProgram.id, selectedProgram.program_name)">Delete from Database</button> 
+                            <button ng-click="UploadProgram()">Upload From File</button>
+                            <button ng-click="DownloadProgram()">Download To File</button><br>
+                        </div>-->
+            <div layout="row">
+                <!-- Frequency -->
+                <div flex="50">
+                    <md-card>
+                        <md-toolbar class="black">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline" style="color: rgb(255, 255, 255);">Pulse Frequency:</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </md-toolbar>
+                        <md-card-content>
+                            <md-card-subhead>Determines the frequency for all LED channels...</md-card-subhead>
+                            <md-slider-container>
+                                <md-slider min="40" max="1000" ng-model="rawJSON.Program.PulseFrequency" class="md-primary">
+                                </md-slider>
+                                <md-input-container>
+                                    <input flex type="number" ng-model="rawJSON.Program.PulseFrequency">
+                                </md-input-container>
+                            </md-slider-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div flex="25" layout-align="end">
+                    <md-card class="black">
+                        <canvas class="chart chart-line" chart-colors="PWMcolors" chart-data="PWMdata" chart-series="PWMseries" chart-options="PWMoptions"></canvas>
+                    </md-card>
+                </div>
+                <div flex="25" layout-align="end">
+                    <md-card class="black">
+                        <canvas class="chart chart-line" chart-colors="TEMPcolors" chart-data="TEMPdata" chart-series="TEMPseries" chart-options="TEMPoptions"></canvas>
+                    </md-card>
+                </div>
+            </div>
+            <div layout="row">
+                <!-- Lightsetting -->
+                <div flex="50">
+                    <md-card>
+                        <md-toolbar class="black">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline" style="color: rgb(255, 255, 255);">Lightsettings:</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </md-toolbar>
+                        <md-card-content>
+                            <md-input-container layout="column" layout-align="start">
+                                <label>Lightsetting</label>
+                                <md-select id="slctBxLightsetting" multiple="false" placeholder="Select lightsetting" ng-model="selectedLightsetting" ng-change="selectedLightsettingChanged()" size=10>
+                                    <md-option ng-repeat="setting in rawJSON.Program.Lightsettings.Lightsetting" ng-value="setting">
+                                        <md-icon class="material-icons" style="color: rgb(0,0,0);">settings</md-icon>
+                                        {{setting.Description + ' (' + setting.RelativeStart + 'd-' + (setting.RelativeStart + setting.Duration) + 'd)' + ' (' + setting.TimeStart + '-' + setting.TimeEnd + ')' + ' (' + (setting.ChannelID != 5 ? (LEDLookup[setting.ChannelID].Wavelength + 'nm') : '6500K') + ')' + ' (' + (((setting.PWMPointB - setting.PWMPointA) * 100 / 4095) | number : 2) + '%)'}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container>
+                                <label for="inptDescription">Name:</label>
+                                <input flex type="text" id="inptDescription" ng-model="selectedLightsetting.Description">
+                            </md-input-container>
+                            <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-click="addNewLightsetting()">Add New
+                                <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">add</md-icon>
+                            </md-button>
+                            <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-click="duplicateLightsetting()">Duplicate Selected
+                                <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">duplicate</md-icon>
+                            </md-button>
+                            <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-click="removeLightsetting(selectedLightsetting)">Remove Selected
+                                <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">delete_forever</md-icon>
+                            </md-button>
+                        </md-card-content>
+                        <!--<h2>Lightsettings</h2>
+                                        <select id="slctBxLightsetting" ng-model="selectedLightsetting" ng-change="selectedLightsettingChanged()" ng-options="y.Description + ' (' + y.RelativeStart + 'd-' + (y.RelativeStart + y.Duration) + 'd)' + ' (' + y.TimeStart + '-' + y.TimeEnd + ')' + ' (' + LEDLookup[y.ChannelID-1].Wavelength + 'nm)' + ' (' + y.Intensity + '%)' for (x, y) in rawJSON.Program.Lightsettings.Lightsetting"
+                                        size="10"><option style="display:none" value="">select a type</option></select><br>
+                                        -->
+                        <!-- <div>Undo Last REmoval Button
+                                        <md-button class="md-raised md-primary" ng-click="undoLastLightsetting()">Undo Last Removal</md-button>
+                                        </div>-->
+                        <!-- DATE&TIME -->
+                        <md-card-content>
+                            <h4>Date & Time:</h4>
+                            <md-input-container>
+                                <label for="inptRelativeStart">Start:</label>
+                                <md-datepicker id="inptRelativeStart" ng-change="relativeStartChanged()" ng-model="_RelativeStart">
+                                </md-datepicker>
+                            </md-input-container>
+                            <md-input-container>
+                                <label for="inptDuration">End:</label>
+                                <md-datepicker id="inptDuration" ng-change="durationChanged()" ng-model="_Duration">
+                                </md-datepicker>
+                            </md-input-container>
+                            <md-input-container>
+                                <label for="inptTimeStart">Start:</label>
+                                <md-icon class="material-icons">access_time</md-icon>
+                                <input type="time" id="inptTimeStart" ng-model="_TimeStart" ng-change="timeStartChanged()">
+                            </md-input-container>
+                            <md-input-container>
+                                <label for="inptTimeEnd">End:</label>
+                                <md-icon class="material-icons">access_time</md-icon>
+                                <input type="time" id="inptTimeEnd" ng-model="_TimeEnd" ng-change="timeEndChanged()">
+                            </md-input-container>
+                        </md-card-content>
+                        <!-- LED Channel -->
+                        <md-card-content>
+                            <h3>LED Channel:</h3>
+                            <md-input-container>
+                                <label>LED CHannel</label>
+                                <md-select id="slctBxWavelenght" placeholder="Select channel" ng-model="_ChannelID" ng-change="wavelengthChanged()">
+                                    <md-option ng-repeat="channel in LEDLookup" ng-value="channel">
+                                        {{ '#' + (channel.ChannelID+1) + ' ' + channel.TrivialName + ' (' + channel.Wavelength + ')'}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </md-card-content>
+                        <!-- LED Channel
+                                <h3>LED Channel:</h3>
+                                <select id="slctBxWavelenght" ng-model="selectedLightsetting.ChannelID" ng-change="wavelengthChanged()" ng-options="y.ChannelID as '#' + y.ChannelID + ' ' + y.TrivialName + ' (' + y.Wavelength + ')' for (x, y) in LEDLookup">
+                                    <option style="display:none" value="">select a type</option>
+                                </select> -->
+                        <!-- Intensity -->
+                        <md-card-content>
+                            <h3>Intensity:</h3>
+                            <md-slider-container>
+                                <h6>PiontA:</h6>
+                                <md-slider class="md-primary" id="rngPWMPointA" min="0" max="{{_PWMPointB}}" step="1" ng-model="_PWMPointA" ng-change="PWMPointChangedAB()"></md-slider>
+                                <md-input-container>
+                                    <input flex type="number" id="inptPWMPointA" min="0" max="{{_PWMPointB}}" step="1" ng-model="_PWMPointA" ng-change="PWMPointChangedAB()">
+                                </md-input-container>
+                            </md-slider-container>
+                            <md-slider-container>
+                                <h6>PiontB:</h6>
+                                <md-slider class="md-primary" id="rngPWMPointB" min="{{_PWMPointA}}" max="4095" step="1" ng-model="_PWMPointB" ng-change="PWMPointChangedAB()"></md-slider>
+                                <md-input-container>
+                                    <input flex type="number" id="inptPWMPointB" min="{{_PWMPointA}}" max="4095" step="1" ng-model="_PWMPointB" ng-change="PWMPointChangedAB()">
+                                </md-input-container>
+                            </md-slider-container>
+                            <md-slider-container>
+                                <h6>Intensity:</h6>
+                                <md-slider class="md-primary" id="rngIntensity" min="0" max="{{(4095-_PWMPointA)*100/4095}}" step="1" ng-model="_Intensity" ng-change="intensityChanged()"></md-slider>
+                                <md-input-container>
+                                    <input flex type="number" id="inptIntensity" min="0" max="{{(4095-_PWMPointA)*100/4095}}" step="1" ng-model="_Intensity" ng-change="intensityChanged()">
+                                </md-input-container>
+                            </md-slider-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div flex="50" layout-align="end">
+                    <div layout=column>
+                        <md-card class="black">
+                            <canvas class="chart chart-line" chart-colors="SPECcolors" chart-data="SPECdata" chart-series="SPECseries" chart-options="SPECoptions"></canvas>
+                        </md-card>
+                        <div layout-align="end">
+                            <md-card class="black">
+                                <md-card-content style="background-color:black; color: rgb(255,255,255);">
+                                    Display PFD alias "der Donut" here!!!
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- LED Channel Calibration-->
+            <div flex="50">
+                <md-card>
+                    <md-toolbar class="black">
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline" style="color: rgb(255, 255, 255);">LED Channel Calibration:</span>
+                            </md-card-title-text>
+                        </md-card-title>
+                    </md-toolbar>
+                    <md-card-content>
+                        <div layout="row">
+                            <md-input-container ng-repeat="(x, y) in LEDLookup">
+                                <label>#{{ y.ChannelID }}:</label>
+                                <input flex type="number" ng-model="rawJSON.Program.Calibrations.Calibration[x].a"=>
+                            </md-input-container>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+
+            <!-- LED Channel Calibration
+                            <h3>LED Channel Calibration:</h3>
+                            <div ng-repeat="(x, y) in LEDLookup">
+                                <label>#{{ y.ChannelID }}:</label>
+                                <input type="number" ng-model="rawJSON.Program.Calibrations.Calibration[x].a">
+                            </div>-->
+
+
+            <!-- LED Channel Calibration  
+                            <div id="Raw Data" class="tabcontent">
+                            <h2>Commands</h2>
+                            <div ng-controller="TimeCtrl">
+                                <p>{{ clock | date:'HH:mm:ss dd.MM.yyyy' }}</p>
+                            </div>
+                            <label for="inptProgramPassword">Set Password:</label>
+                            <input type="text" id="inptProgramPassword" ng-model="_ProgramPassword">
+                            <br>
+                            <br>
+                            <button ng-click="postJSON(1)">Sync Time and Post JSON</button>
+                            </div>
+                            </div>-->
+            <div layout=row layout-xs=column flex="50">
+                <md-card>
+                    <md-toolbar class="black">
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline" style="color: rgb(255, 255, 255);">Set Password:</span>
+                            </md-card-title-text>
+                        </md-card-title>
+                    </md-toolbar>
+                    <md-card-content>
+                        <div id="Raw Data" class="tabcontent">
+                            <md-input-container>
+                                <label for="inptProgramPassword">Set Password:</label>
+                                <input type="text" id="inptProgramPassword" ng-model="_ProgramPassword">
+                            </md-input-container>
+                        </div>
+                    </md-card-content>
+                </md-card>
+                <md-card>
+                    <md-toolbar class="black">
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline" style="color: rgb(255, 255, 255);">Synchronize & Send:</span>
+                            </md-card-title-text>
+                        </md-card-title>
+                    </md-toolbar>
+                    <md-card-content>
+                        <md-input-container>
+                            <md-icon class="material-icons">access_time</md-icon>
+                        </md-input-container>
+                        <p>{{ clock | date:'HH:mm:ss dd.MM.yyyy' }}</p>
+                        <div layout="row">
+                            <md-button class="md-raised" style="background-color:black; color: rgb(255,255,255);" ng-click="postJSON(1)">Send
+                                <md-icon class="material-icons" style="background-color:black; color: rgb(255,255,255);">send</md-icon>
+                                <!-- Doppel Tick icon by Icons8 -->
+
+                            </md-button>
+                            <span>
+                                <img ng-src="./images/{{_SendIcon}}.svg" height="40">
+                            </span>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+        </div>
+
+        <!--<div id="middlebar">
+                            <div id="charts">
+                                <canvas class="chart chart-line" chart-colors="PWMcolors" chart-data="PWMdata" chart-series="PWMseries" chart-options="PWMoptions"></canvas>
+                                <canvas class="chart chart-line" chart-colors="SPECcolors" chart-data="SPECdata" chart-series="SPECseries" chart-options="SPECoptions"></canvas>                
+                            </div>
+                        </div>
+                        <div id="sidebar">
+                            <div id="jsoninfo">
+                                <pre>{{rawJSON|json}}</pre>
+                                 <br>
+                                <pre>{{users|json}}</pre> 
+                                 <br> 
+                                 <pre>{{programs|json}}</pre> 
+                            </div>
+                        </div>-->
+    </div>
+
+    <div id="routerApp" ng-app="router">
+        this is router
+        <div ng-view></div>
+    </div>
+
+    <script type="text/javascript" src="./js/hbluz.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+{
+    "Device": {
+        "DeviceName": "HBLUZ_1",
+        "DeviceModel": 0,
+        "Capabilities": [{
+                "CapabilityType": 0,
+                "ChannelID": 1,
+                "Wavelength": 300,
+                "TrivialName": "UV-B",
+                "Calibration": 0
+            },
+            {
+                "CapabilityType": 0,
+                "ChannelID": 2,
+                "Wavelength": 440,
+                "TrivialName": "Royal Blue",
+                "Calibration": 0
+            },
+            {
+                "CapabilityType": 0,
+                "ChannelID": 3,
+                "Wavelength": 530,
+                "TrivialName": "True Green",
+                "Calibration": 0
+            },
+            {
+                "CapabilityType": 0,
+                "ChannelID": 4,
+                "Wavelength": 660,
+                "TrivialName": "Hyper Red",
+                "Calibration": 0
+            },
+            {
+                "CapabilityType": 0,
+                "ChannelID": 5,
+                "Wavelength": 730,
+                "TrivialName": "Far Red",
+                "Calibration": 0
+            },
+            {
+                "CapabilityType": 0,
+                "ChannelID": 6,
+                "Wavelength": 6500,
+                "TrivialName": "Street White",
+                "Calibration": 0
+            },
+            {
+                "CapabilityType": 1,
+                "HardwareAddress": "06AF3E4A5F",
+                "Calibration": 0,
+                "TrivialName": "Temperatur Oben",
+                "GroupID": 0
+            },
+            {
+                "CapabilityType": 1,
+                "HardwareAddress": "06AE3E4A5F",
+                "Calibration": 0,
+                "TrivialName": "Temperatur Oben",
+                "GroupID": 0
+            },
+            {
+                "CapabilityType": 1,
+                "HardwareAddress": "07AF3E4A5F",
+                "Calibration": 0,
+                "TrivialName": "Temperatur Unten",
+                "GroupID": 1
+            },
+            {
+                "CapabilityType": 1,
+                "HardwareAddress": "08AF3E4A5F",
+                "Calibration": 0,
+                "TrivialName": "Temperatur Unten",
+                "GroupID": 1
+            }
+        ]
+    }
+
+}
