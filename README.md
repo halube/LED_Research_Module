@@ -1,6 +1,8 @@
 # LED_Research_Module
 Software for the LED Research Module (Bethge 2018) and the follow up project LED Modul baselight (Chluba 2022).
 
+![Preview](5-0.jpg)
+
 Raspberry Pi as Webserver:
 hbluz_server
 
