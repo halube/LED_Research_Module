@@ -9,6 +9,7 @@ The software allows to set "Light recipes" defining Photoperiode, light intensit
 
 
 
+![Software_concept](Software_concept.png)
 
 Raspberry Pi as Webserver:
 
