@@ -1,5 +1,12 @@
 # LED_Research_Module
-Software for the LED Research Module (Bethge 2018) and the follow up project LED Modul baselight (Chluba 2022). 
+Software for the LED Research Module (Bethge 2018) and the follow up project LED Modul baselight (Chluba 2022).
+
+Raspberry Pi as Webserver:
+hbluz_server
+
+Wemos D1 mini with ESP8266 as weblient:
+hbluz_client
+
 
 Citation: 
 
