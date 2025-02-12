@@ -1,12 +1,21 @@
 # LED_Research_Module
-Software for the LED Research Module (Bethge 2018) and the follow up project LED Modul "baselight" (Chluba 2022)./n
+
+LED Research modules for Plant tissue culture
 
 ![Preview](5-0.jpg)
 
+Software for the LED Research Module (Bethge 2018) and the follow up project LED Modul "baselight" (Chluba 2022).
+The software allows to set "Light recipes" defining Photoperiode, light intensity, light quality, and frequenz of the pulse-width regulated LEDs.
+
+
+
+
 Raspberry Pi as Webserver:
+
 hbluz_server
 
 Wemos D1 mini with ESP8266 as weblient:
+
 hbluz_client
 
 
